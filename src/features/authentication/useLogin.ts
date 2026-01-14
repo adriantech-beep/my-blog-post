@@ -12,7 +12,7 @@ export function useLogin() {
     onSuccess: (data) => {
       toast.success("Login successful!");
       queryClient.setQueryData(["user"], data);
-      navigate("/homepage", { replace: true });
+      navigate("/all-posts", { replace: true });
     },
     onError: (error) => {
       toast.error("Login failed. Please check your email and password.");

@@ -27,14 +27,7 @@ const RegistrationForm = () => {
 
   const onSubmit = (data: LoginFormSchema) => {
     const { email, password } = data;
-    login(
-      { email, password },
-      {
-        onSettled: () => {
-          form.reset();
-        },
-      }
-    );
+    login({ email, password });
   };
   return (
     <FormProvider {...form}>

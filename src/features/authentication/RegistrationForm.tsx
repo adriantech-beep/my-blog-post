@@ -14,13 +14,15 @@ import { useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import type { RegistrationFormSchema } from "./registrationSchema";
 import RegistrationFields from "./RegistrationFields";
+import { useSignup } from "./useSignup";
 
 const RegistrationForm = () => {
+  const { signup } = useSignup();
   const navigate = useNavigate();
 
   const form = useForm<RegistrationFormSchema>({
     defaultValues: {
-      name: "",
+      userName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -28,8 +30,8 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = (data: RegistrationFormSchema) => {
-    // signup(data);
-    console.log(data);
+    const { userName, email, password } = data;
+    signup({ userName, email, password });
   };
 
   return (

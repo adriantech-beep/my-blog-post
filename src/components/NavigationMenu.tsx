@@ -8,6 +8,9 @@ const NavigationMenu = () => {
   const navigate = useNavigate();
   return (
     <div className="flex items-center gap-3">
+      <p className="cursor-pointer " onClick={() => navigate("/all-posts")}>
+        Home
+      </p>
       {user ? (
         <Account />
       ) : (

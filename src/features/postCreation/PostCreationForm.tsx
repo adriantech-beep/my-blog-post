@@ -8,28 +8,39 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-// import { useNavigate } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import type { BlogPostFormSchema } from "./postCreationSchema";
 import PostCreationFields from "./PostCreationFields";
+import { useUser } from "../authentication/useUser";
+import { useCreatePost } from "./useCreatePost";
 
 const PostCreationForm = () => {
-  //   const navigate = useNavigate();
+  const { user, isAuthenticated } = useUser();
+  const { createPost } = useCreatePost();
+
+  console.log(user);
+
+  const userName = user?.identities?.at(0)?.identity_data?.userName || "";
+  const userId = user?.id || "";
 
   const form = useForm<BlogPostFormSchema>({
     defaultValues: {
       title: "",
-      slug: "",
+      body: "",
       excerpt: "",
-      content: "",
-      featuredImage: "",
       tags: [],
-      status: "draft",
+      featuredImage: "",
+      userName: userName,
+      userId: userId,
     },
   });
 
   const onSubmit = (data: BlogPostFormSchema) => {
-    console.log(data);
+    if (!isAuthenticated) {
+      return;
+    }
+    const { title, body, excerpt, tags, featuredImage } = data;
+    createPost({ title, body, excerpt, tags, featuredImage, userName, userId });
   };
 
   return (
