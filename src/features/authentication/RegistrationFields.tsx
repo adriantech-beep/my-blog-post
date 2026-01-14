@@ -16,7 +16,7 @@ type FieldConfig = {
 
 const userInfoFields: FieldConfig[] = [
   {
-    name: "name",
+    name: "userName",
     placeholder: "Enter your name",
     type: "text",
   },

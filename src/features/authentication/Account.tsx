@@ -28,7 +28,9 @@ const Account = () => {
           </Avatar>
         </MenubarTrigger>
         <MenubarContent>
-          <MenubarItem>My Posts</MenubarItem>
+          <MenubarItem onClick={() => navigate("/user-post")}>
+            My Posts
+          </MenubarItem>
           <MenubarItem onClick={() => navigate("/create-post")}>
             Create A Post
           </MenubarItem>

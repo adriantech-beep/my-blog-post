@@ -18,6 +18,27 @@ export async function login({
   return data;
 }
 
+export async function signup({
+  userName,
+  email,
+  password,
+}: {
+  userName: string;
+  email: string;
+  password: string;
+}) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { userName } },
+  });
+  if (error) {
+    console.error("Error during signup:", error);
+    throw new Error("Signup failed");
+  }
+  return data;
+}
+
 export async function getCurrentUser() {
   const { data: session } = await supabase.auth.getSession();
   if (!session?.session) {

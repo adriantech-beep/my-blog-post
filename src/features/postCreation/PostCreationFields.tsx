@@ -22,7 +22,7 @@ const postInfoFields: FieldConfig[] = [
     type: "text",
   },
   {
-    name: "slug",
+    name: "body",
     placeholder: "auto-generated-from-title",
     type: "text",
   },
@@ -32,28 +32,14 @@ const postInfoFields: FieldConfig[] = [
     type: "textarea",
   },
   {
-    name: "content",
-    placeholder: "Write your blog content here...",
-    type: "textarea",
-  },
-  {
-    name: "featuredImage",
-    placeholder: "Paste featured image URL (optional)",
-    type: "text",
-  },
-  {
     name: "tags",
     placeholder: "e.g. nextjs, react, tailwind",
     type: "tags",
   },
   {
-    name: "status",
-    placeholder: "Select status",
-    type: "select",
-    options: [
-      { label: "Draft", value: "draft" },
-      { label: "Published", value: "published" },
-    ],
+    name: "featuredImage",
+    placeholder: "Paste featured image URL (optional)",
+    type: "text",
   },
 ];
 
