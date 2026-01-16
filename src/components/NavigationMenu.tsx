@@ -6,6 +6,7 @@ import { useUser } from "../features/authentication/useUser";
 const NavigationMenu = () => {
   const { user } = useUser();
   const navigate = useNavigate();
+
   return (
     <div className="flex items-center gap-3">
       <p className="cursor-pointer " onClick={() => navigate("/all-posts")}>

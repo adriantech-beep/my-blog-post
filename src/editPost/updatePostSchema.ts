@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const blogPostSchema = z.object({
+export const updatePostSchema = z.object({
   title: z.string().min(1, "Title is required").max(150, "Title is too long"),
 
   body: z.string().min(1, "Body is required"),
@@ -18,8 +18,6 @@ export const blogPostSchema = z.object({
     .url("Invalid image URL")
     .optional()
     .or(z.literal("")),
-  userName: z.string().optional(),
-  userId: z.string().optional(),
 });
 
-export type BlogPostFormSchema = z.infer<typeof blogPostSchema>;
+export type UpdatePostSchema = z.infer<typeof updatePostSchema>;

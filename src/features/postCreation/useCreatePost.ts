@@ -2,37 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { createPost as createPostApi } from "../../services/apiPosts";
 import { toast } from "sonner";
+import type { BlogPostFormSchema } from "./postCreationSchema";
 
 export function useCreatePost() {
   const navigate = useNavigate();
 
   const { mutate: createPost, isPending } = useMutation({
-    mutationFn: ({
-      title,
-      body,
-      excerpt,
-      tags,
-      featuredImage,
-      userName,
-      userId,
-    }: {
-      title: string;
-      body: string;
-      excerpt?: string;
-      tags?: string[];
-      featuredImage?: string;
-      userName: string;
-      userId: string;
-    }) =>
-      createPostApi({
-        title,
-        body,
-        excerpt,
-        tags,
-        featuredImage,
-        userName,
-        userId,
-      }),
+    mutationFn: (data: BlogPostFormSchema) => createPostApi(data),
 
     onSuccess: (data) => {
       navigate("/all-posts", { replace: true });
