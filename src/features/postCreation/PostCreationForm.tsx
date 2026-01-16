@@ -1,7 +1,6 @@
 import { Button } from "../../components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -17,9 +16,6 @@ import { useCreatePost } from "./useCreatePost";
 const PostCreationForm = () => {
   const { user, isAuthenticated } = useUser();
   const { createPost } = useCreatePost();
-
-  console.log(user);
-
   const userName = user?.identities?.at(0)?.identity_data?.userName || "";
   const userId = user?.id || "";
 
@@ -28,7 +24,7 @@ const PostCreationForm = () => {
       title: "",
       body: "",
       excerpt: "",
-      tags: [],
+      tags: "",
       featuredImage: "",
       userName: userName,
       userId: userId,
@@ -51,11 +47,6 @@ const PostCreationForm = () => {
           <CardDescription>
             Fill in the details below to create a new blog post.
           </CardDescription>
-          <CardAction>
-            {/* <Button variant="link" onClick={() => navigate("/posts")}>
-              Back to posts
-            </Button> */}
-          </CardAction>
         </CardHeader>
 
         <CardContent>
