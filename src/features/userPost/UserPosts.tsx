@@ -41,7 +41,7 @@ const UserPosts = () => {
   const { isPending, error } = useGetUserPosts(user?.id ?? "");
 
   const { items, pagination } = useSelector(
-    (state: RootState) => state.userPosts
+    (state: RootState) => state.userPosts,
   );
 
   const totalPages = Math.ceil(pagination.total / pagination.limit);
@@ -60,9 +60,7 @@ const UserPosts = () => {
                 <DialogTrigger asChild>
                   <button
                     className="cursor-pointer"
-                    onClick={() =>
-                      setEditPost({ ...post, tags: post.tags ?? "" })
-                    }
+                    onClick={() => setEditPost({ ...post })}
                   >
                     <SquarePen />
                   </button>
@@ -91,8 +89,8 @@ const UserPosts = () => {
                 {post.title}
               </CardTitle>
 
-              <div className="w-full h-64 overflow-hidden mb-4">
-                <img src={post?.featured_image ?? ""} alt={post.title} />
+              <div className="flex items-center justify-center p-4 w-full h-64 overflow-hidden mb-4">
+                <img src={post?.image ?? ""} alt={post.title} />
               </div>
             </CardHeader>
             <Card className="w-full flex flex-col text-center items-center justify-center">
@@ -106,10 +104,6 @@ const UserPosts = () => {
               </div>
               <CardDescription className="text-gray-900 font-bold">
                 {post.body}
-              </CardDescription>
-              <p>{post.tags}</p>
-              <CardDescription className="text-gray-800 italic mt-4 text-lg leading-none p-2">
-                By {post.excerpt}
               </CardDescription>
             </Card>
           </Card>

@@ -7,15 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import type { BlogPostFormSchema } from "./postCreationSchema";
 import PostCreationFields from "./PostCreationFields";
 import { useUser } from "../authentication/useUser";
 import { useCreatePost } from "./useCreatePost";
+import { useEffect, useMemo } from "react";
 
 const PostCreationForm = () => {
   const { user, isAuthenticated } = useUser();
-  const { createPost } = useCreatePost();
+  const { createPost, isPending } = useCreatePost();
   const userName = user?.identities?.at(0)?.identity_data?.userName || "";
   const userId = user?.id || "";
 
@@ -23,20 +24,38 @@ const PostCreationForm = () => {
     defaultValues: {
       title: "",
       body: "",
-      excerpt: "",
-      tags: "",
-      featuredImage: "",
+      image: undefined,
       userName: userName,
       userId: userId,
     },
   });
 
+  const image = useWatch({
+    control: form.control,
+    name: "image",
+  });
+
+  const previewUrl = useMemo(() => {
+    if (!image) return null;
+    return URL.createObjectURL(image);
+  }, [image]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const onSubmit = (data: BlogPostFormSchema) => {
     if (!isAuthenticated) {
       return;
     }
-    const { title, body, excerpt, tags, featuredImage } = data;
-    createPost({ title, body, excerpt, tags, featuredImage, userName, userId });
+    const { title, body, image } = data;
+    createPost({ title, body, image, userName, userId });
+
+    console.log(data);
   };
 
   return (
@@ -51,10 +70,26 @@ const PostCreationForm = () => {
 
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+            {image && (
+              <div>
+                <button onClick={() => form.setValue("image", undefined)}>
+                  X
+                </button>
+                <img
+                  src={previewUrl || ""}
+                  alt="Preview"
+                  className="mt-4 rounded-md max-h-48"
+                />
+              </div>
+            )}
             <PostCreationFields />
 
             <CardFooter className="flex-col gap-2 px-0">
-              <Button type="submit" className="w-full mt-4">
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="w-full mt-4"
+              >
                 Save Post
               </Button>
             </CardFooter>
