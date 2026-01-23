@@ -1,5 +1,6 @@
+import { UpdatePostSchema } from "@/editPost/updatePostSchema";
 import type { BlogPostFormSchema } from "../features/postCreation/postCreationSchema";
-import supabase from "./supabase";
+import supabase, { supabaseUrl } from "./supabase";
 
 export async function getPosts({
   page,
@@ -30,27 +31,45 @@ export async function getPosts({
 export async function createPost({
   title,
   body,
-  excerpt,
-  tags,
-  featuredImage,
+  image,
   userName,
   userId,
 }: BlogPostFormSchema) {
+  let imagePath: string | null = null;
+
+  if (image) {
+    const imageName = `${crypto.randomUUID()}-${image.name}`.replaceAll(
+      "/",
+      "",
+    );
+
+    const { error: storageError } = await supabase.storage
+      .from("post_images")
+      .upload(imageName, image);
+
+    if (storageError) {
+      console.error(storageError);
+      throw new Error("Image upload failed");
+    }
+
+    imagePath = `${supabaseUrl}/storage/v1/object/public/post_images/${imageName}`;
+  }
+
   const { data, error } = await supabase.from("posts").insert([
     {
       title,
       body,
-      excerpt,
-      tags,
-      featured_image: featuredImage,
+      image: imagePath,
       user_name: userName,
       user_id: userId,
     },
   ]);
+
   if (error) {
-    console.error("Error creating post:", error);
+    console.error(error);
     throw new Error("Could not create post");
   }
+
   return data;
 }
 
@@ -92,6 +111,7 @@ export async function deleteUserPost(postId: string) {
     .delete()
     .eq("id", postId)
     .single();
+
   if (error) {
     console.error("Error deleting post:", error);
     throw new Error("Could not delete post");
@@ -103,34 +123,42 @@ export async function updateUserPost({
   id,
   title,
   body,
-  excerpt,
-  tags,
-  featuredImage,
-}: {
-  id: string;
-  title: string;
-  body: string;
-  excerpt?: string;
-  tags?: string;
-  featuredImage?: string;
-}) {
+  image,
+}: UpdatePostSchema) {
+  let imagePath: string | undefined;
+
+  if (image instanceof File) {
+    const imageName = `${crypto.randomUUID()}-${image.name}`.replaceAll(
+      "/",
+      "",
+    );
+
+    const { error: uploadError } = await supabase.storage
+      .from("post_images")
+      .upload(imageName, image);
+
+    if (uploadError) throw new Error("Image upload failed");
+
+    imagePath = `${supabaseUrl}/storage/v1/object/public/post_images/${imageName}`;
+  }
+
+  const updatePayload: { title: string; body: string; image?: string } = {
+    title,
+    body,
+  };
+
+  if (imagePath) {
+    updatePayload.image = imagePath;
+  }
+
   const { data, error } = await supabase
     .from("posts")
-    .update({
-      title,
-      body,
-      excerpt,
-      tags,
-      featured_image: featuredImage,
-    })
+    .update(updatePayload)
     .eq("id", id)
     .select()
     .single();
 
-  if (error) {
-    console.error("Error updating post:", error);
-    throw new Error("Could not update post");
-  }
+  if (error) throw new Error("Could not update post");
 
   return data;
 }

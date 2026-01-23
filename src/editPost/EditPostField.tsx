@@ -27,24 +27,9 @@ const postInfoFields: FieldConfig[] = [
     placeholder: "auto-generated-from-title",
     type: "text",
   },
-  {
-    name: "excerpt",
-    placeholder: "Short summary of the post (optional)",
-    type: "textarea",
-  },
-  {
-    name: "tags",
-    placeholder: "e.g. nextjs, react, tailwind",
-    type: "tags",
-  },
-  {
-    name: "featuredImage",
-    placeholder: "Paste featured image URL (optional)",
-    type: "text",
-  },
 ];
 
-const PostCreationFields = () => {
+const EditPostField = () => {
   const { control } = useFormContext<UpdatePostSchema>();
 
   return (
@@ -70,8 +55,28 @@ const PostCreationFields = () => {
           )}
         />
       ))}
+
+      <FormField
+        control={control}
+        name="image"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl className="mt-5">
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  field.onChange(file);
+                }}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };
 
-export default PostCreationFields;
+export default EditPostField;
