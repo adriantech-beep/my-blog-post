@@ -31,7 +31,7 @@ const AllPosts = () => {
 
   const dispatch = useDispatch();
 
-  const { items, pagination } = useSelector((state: RootState) => state.posts);
+  const { posts, pagination } = useSelector((state: RootState) => state.posts);
 
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
@@ -49,51 +49,51 @@ const AllPosts = () => {
 
   if (isPending) return <div>Loading posts...</div>;
   if (error) return <div>Failed to load posts</div>;
-  if (!items.length) return <div>No posts to show</div>;
+  if (!posts.length) return <div>No posts to show</div>;
 
   return (
     <div>
       <div className="flex gap-3 ">
-        {items.map((post) => (
+        {posts.map((post: Post) => (
           <Card key={post.id} className="w-2xl p-2">
             <CardHeader>
               <CardTitle className="font-medium text-gray-500">
-                {post.title}
+          {post.title}
               </CardTitle>
 
               <div className="flex items-center justify-center p-4 w-full h-64 overflow-hidden mb-4">
-                <img src={post?.image ?? ""} alt={post.title} />
+          <img src={post?.image ?? ""} alt={post.title} />
               </div>
             </CardHeader>
             <Card className="w-full flex flex-col text-center items-center justify-center">
               <div className="w-full  justify-items-start p-2">
-                <h3 className="text-md font-medium text-gray-600">
-                  {post.user_name}
-                </h3>
-                <p className="text-sm font-light text-gray-500">
-                  {getMonthDay(post.created_at)}
-                </p>
+          <h3 className="text-md font-medium text-gray-600">
+            {post.user_name}
+          </h3>
+          <p className="text-sm font-light text-gray-500">
+            {getMonthDay(post.created_at)}
+          </p>
               </div>
               <CardDescription className="text-gray-900 font-bold">
-                {post.body}
+          {post.body}
               </CardDescription>
 
               <div className="w-full flex items-end justify-end px-6">
-                <CommentCount postId={post?.id} />
+          <CommentCount postId={post?.id} />
               </div>
-              <Dialog onOpenChange={(open) => !open && setSelectedPost(null)}>
-                <DialogTrigger asChild>
-                  <button
-                    className="flex cursor-pointer"
-                    onClick={() => setSelectedPost(post)}
-                  >
-                    Add a comment
-                  </button>
-                </DialogTrigger>
+              <Dialog onOpenChange={(open: boolean) => !open && setSelectedPost(null)}>
+          <DialogTrigger asChild>
+            <button
+              className="flex cursor-pointer"
+              onClick={() => setSelectedPost(post)}
+            >
+              Add a comment
+            </button>
+          </DialogTrigger>
 
-                <DialogContent>
-                  {selectedPost && <AllCommentsModal post={selectedPost} />}
-                </DialogContent>
+          <DialogContent>
+            {selectedPost && <AllCommentsModal post={selectedPost} />}
+          </DialogContent>
               </Dialog>
             </Card>
           </Card>

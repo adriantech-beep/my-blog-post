@@ -9,7 +9,7 @@ export function useGetPosts() {
   const dispatch = useDispatch();
 
   const { page, limit } = useSelector(
-    (state: RootState) => state.posts.pagination
+    (state: RootState) => state.posts.pagination,
   );
 
   const { data, isPending, error } = useQuery({
@@ -21,9 +21,9 @@ export function useGetPosts() {
     if (data) {
       dispatch(
         setPosts({
-          items: data.items,
+          posts: data.posts,
           total: data.total,
-        })
+        }),
       );
     }
   }, [data, dispatch]);
