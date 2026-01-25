@@ -13,20 +13,17 @@ import PostCreationFields from "./PostCreationFields";
 import { useUser } from "../authentication/useUser";
 import { useCreatePost } from "./useCreatePost";
 import { useEffect, useMemo } from "react";
+import { CircleMinus } from "lucide-react";
 
 const PostCreationForm = () => {
   const { user, isAuthenticated } = useUser();
   const { createPost, isPending } = useCreatePost();
-  const userName = user?.identities?.at(0)?.identity_data?.userName || "";
-  const userId = user?.id || "";
 
   const form = useForm<BlogPostFormSchema>({
     defaultValues: {
       title: "",
       body: "",
       image: undefined,
-      userName: userName,
-      userId: userId,
     },
   });
 
@@ -52,8 +49,11 @@ const PostCreationForm = () => {
     if (!isAuthenticated) {
       return;
     }
-    const { title, body, image } = data;
-    createPost({ title, body, image, userName, userId });
+    createPost({
+      ...data,
+      userName: user?.identities?.at(0)?.identity_data?.userName || "",
+      userId: user?.id || "",
+    });
 
     console.log(data);
   };
@@ -71,15 +71,23 @@ const PostCreationForm = () => {
         <CardContent>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             {image && (
-              <div>
-                <button onClick={() => form.setValue("image", undefined)}>
-                  X
-                </button>
-                <img
-                  src={previewUrl || ""}
-                  alt="Preview"
-                  className="mt-4 rounded-md max-h-48"
-                />
+              <div className="mt-3 flex items-center justify-center relative">
+                <div>
+                  <div className="flex items-end justify-end absolute top-0 right-0 ">
+                    <button
+                      type="button"
+                      className="cursor-pointer"
+                      onClick={() => form.setValue("image", undefined)}
+                    >
+                      <CircleMinus />
+                    </button>
+                  </div>
+                  <img
+                    src={previewUrl || ""}
+                    alt="Preview"
+                    className="mt-4 rounded-md max-h-48"
+                  />
+                </div>
               </div>
             )}
             <PostCreationFields />
