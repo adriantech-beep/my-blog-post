@@ -9,12 +9,12 @@ type Pagination = {
 };
 
 type PostsState = {
-  items: Post[];
+  posts: Post[];
   pagination: Pagination;
 };
 
 const initialState: PostsState = {
-  items: [],
+  posts: [],
   pagination: {
     page: 1,
     limit: 4,
@@ -26,13 +26,13 @@ const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    setPosts(state, action: PayloadAction<{ items: Post[]; total: number }>) {
-      state.items = action.payload.items;
+    setPosts(state, action: PayloadAction<{ posts: Post[]; total: number }>) {
+      state.posts = action.payload.posts;
       state.pagination.total = action.payload.total;
     },
 
     addPost(state, action: PayloadAction<Post>) {
-      state.items.unshift(action.payload);
+      state.posts.unshift(action.payload);
       state.pagination.total += 1;
     },
 

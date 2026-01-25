@@ -10,11 +10,9 @@ export function useCreatePost() {
   const { mutate: createPost, isPending } = useMutation({
     mutationFn: (data: BlogPostFormSchema) => createPostApi(data),
 
-    onSuccess: (data) => {
+    onSuccess: () => {
       navigate("/all-posts", { replace: true });
-      //   queryClient.setQueryData(["user"], data);
       toast.success("Post created successfully");
-      console.log(data);
     },
     onError: (error) => {
       toast.error("Failed to create post. Please try again.");

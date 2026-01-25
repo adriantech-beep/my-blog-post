@@ -23,7 +23,7 @@ export async function getPosts({
     throw new Error("Could not fetch posts");
   }
   return {
-    items: data ?? [],
+    posts: data ?? [],
     total: count ?? 0,
   };
 }
