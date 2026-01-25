@@ -20,6 +20,12 @@ import {
 import { getMonthDay } from "../helper/transformDate";
 import { setPage } from "./postSlice";
 
+import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import AllCommentsModal from "@/comment/AllCommentsModal";
+import { useState } from "react";
+import { Post } from "@/types/post";
+import CommentCount from "@/components/CommentCount";
+
 const AllPosts = () => {
   const { isPending, error } = useGetPosts();
 
@@ -27,7 +33,7 @@ const AllPosts = () => {
 
   const { items, pagination } = useSelector((state: RootState) => state.posts);
 
-  console.log(items);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const totalPages = Math.ceil(pagination.total / pagination.limit);
 
@@ -71,6 +77,24 @@ const AllPosts = () => {
               <CardDescription className="text-gray-900 font-bold">
                 {post.body}
               </CardDescription>
+
+              <div className="w-full flex items-end justify-end px-6">
+                <CommentCount postId={post?.id} />
+              </div>
+              <Dialog onOpenChange={(open) => !open && setSelectedPost(null)}>
+                <DialogTrigger asChild>
+                  <button
+                    className="flex cursor-pointer"
+                    onClick={() => setSelectedPost(post)}
+                  >
+                    Add a comment
+                  </button>
+                </DialogTrigger>
+
+                <DialogContent>
+                  {selectedPost && <AllCommentsModal post={selectedPost} />}
+                </DialogContent>
+              </Dialog>
             </Card>
           </Card>
         ))}

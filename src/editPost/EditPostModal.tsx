@@ -55,6 +55,7 @@ const EditPostModal = ({ post, onClose }: EditPostModalProps) => {
   }, [previewUrl]);
 
   const onSubmit = (data: UpdatePostSchema) => {
+    if (!post.id) return;
     updatePost(
       { id: post.id, ...data },
       {
@@ -79,6 +80,7 @@ const EditPostModal = ({ post, onClose }: EditPostModalProps) => {
             <div className="flex items-center justify-center flex-col">
               <div className="w-full flex items-end justify-end">
                 <button
+                  type="button"
                   className="cursor-pointer"
                   onClick={() => form.setValue("image", undefined)}
                 >

@@ -1,10 +1,12 @@
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/constants/constants";
-import { z } from "zod";
+import z from "zod";
 
-export const blogPostSchema = z.object({
-  title: z.string().min(1, "Title is required").max(150, "Title is too long"),
-
-  body: z.string().min(1, "Body is required"),
+export const commentSchema = z.object({
+  comment: z
+    .string()
+    .max(150, "Comment is too long")
+    .optional()
+    .or(z.literal("")),
 
   image: z
     .instanceof(File)
@@ -14,8 +16,9 @@ export const blogPostSchema = z.object({
       `Only .jpg, .jpeg, .png, and .webp formats are supported.`,
     )
     .optional(),
-  userName: z.string().optional(),
-  userId: z.string().optional(),
+  post_id: z.string().optional(),
+  user_id: z.string().optional(),
+  user_name: z.string().optional(),
 });
 
-export type BlogPostFormSchema = z.infer<typeof blogPostSchema>;
+export type CommentSchema = z.infer<typeof commentSchema>;

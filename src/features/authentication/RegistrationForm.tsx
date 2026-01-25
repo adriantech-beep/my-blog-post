@@ -30,8 +30,7 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = (data: RegistrationFormSchema) => {
-    const { userName, email, password } = data;
-    signup({ userName, email, password });
+    signup({ ...data });
   };
 
   return (
@@ -43,7 +42,11 @@ const RegistrationForm = () => {
             Enter your email below to create your account
           </CardDescription>
           <CardAction>
-            <Button variant="link" onClick={() => navigate("/login-page")}>
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => navigate("/login-page")}
+            >
               Sign In
             </Button>
           </CardAction>
