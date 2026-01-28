@@ -4,6 +4,7 @@ import { Post } from "@/types/post";
 import { useGetComments } from "./useGetComments";
 import { timeAgo } from "@/helper/timeAgo";
 import { useEffect, useRef } from "react";
+import MessageIcon from "../../public/message-circle-more.svg";
 
 type AllCommentsModalProps = {
   post: Post;
@@ -28,7 +29,7 @@ const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
       ) : comments?.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-72 gap-2 text-center">
           <img
-            src="../../public/message-circle-more.svg"
+            src={MessageIcon}
             alt="No comments"
             className="w-10 h-10 opacity-60"
           />
