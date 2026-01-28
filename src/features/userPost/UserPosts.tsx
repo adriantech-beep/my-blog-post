@@ -32,11 +32,11 @@ import {
 } from "../../components/ui/dialog";
 
 const UserPosts = () => {
+  const dispatch = useDispatch();
   const { user } = useUser();
-  const { deletePost, isPending: isDeleting } = useDeleteUserPost();
   const [editPost, setEditPost] = useState<Post | null>(null);
 
-  const dispatch = useDispatch();
+  const { deletePost, isPending: isDeleting } = useDeleteUserPost();
 
   const { isPending, error } = useGetUserPosts(user?.id ?? "");
 
@@ -46,10 +46,17 @@ const UserPosts = () => {
 
   const totalPages = Math.ceil(pagination.total / pagination.limit);
 
-  if (isPending) return <div>Loading posts...</div>;
-  if (error) return <div>Failed to load posts</div>;
+  if (isPending) {
+    return <div>Loading posts...</div>;
+  }
 
-  if (!items?.length) return <div>No posts to show</div>;
+  if (error) {
+    return <div>Failed to load posts</div>;
+  }
+
+  if (!items?.length) {
+    return <div>No posts to show</div>;
+  }
 
   return (
     <div>

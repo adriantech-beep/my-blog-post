@@ -27,13 +27,12 @@ import { Post } from "@/types/post";
 import CommentCount from "@/components/CommentCount";
 
 const AllPosts = () => {
-  const { isPending, error } = useGetPosts();
-
   const dispatch = useDispatch();
 
   const { posts = [], pagination } = useSelector(
     (state: RootState) => state.posts ?? {},
   );
+  const { isPending, error } = useGetPosts();
 
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
@@ -49,10 +48,17 @@ const AllPosts = () => {
     if (pagination.page < totalPages) dispatch(setPage(pagination.page + 1));
   }
 
-  if (isPending) return <div>Loading posts...</div>;
-  if (error) return <div>Failed to load posts</div>;
+  if (isPending) {
+    return <div>Loading posts...</div>;
+  }
 
-  if (!posts?.length) return <div>No posts to show</div>;
+  if (error) {
+    return <div>Failed to load posts</div>;
+  }
+
+  if (!posts?.length) {
+    return <div>No posts to show</div>;
+  }
 
   return (
     <div>
