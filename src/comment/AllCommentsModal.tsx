@@ -4,7 +4,7 @@ import { Post } from "@/types/post";
 import { useGetComments } from "./useGetComments";
 import { timeAgo } from "@/helper/timeAgo";
 import { useEffect, useRef } from "react";
-import MessageIcon from "../../public/message-circle-more.svg";
+import MessageIcon from "../assets/message-circle-more.svg";
 
 type AllCommentsModalProps = {
   post: Post;
@@ -12,6 +12,7 @@ type AllCommentsModalProps = {
 
 const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
   const { comments, isPending } = useGetComments(post?.id);
+
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

@@ -25,9 +25,12 @@ import AllCommentsModal from "@/comment/AllCommentsModal";
 import { useState } from "react";
 import { Post } from "@/types/post";
 import CommentCount from "@/components/CommentCount";
+import { useUser } from "@/features/authentication/useUser";
 
 const AllPosts = () => {
   const dispatch = useDispatch();
+
+  const { isAuthenticated } = useUser();
 
   const { posts = [], pagination } = useSelector(
     (state: RootState) => state.posts ?? {},
@@ -93,14 +96,18 @@ const AllPosts = () => {
               <Dialog
                 onOpenChange={(open: boolean) => !open && setSelectedPost(null)}
               >
-                <DialogTrigger asChild>
-                  <button
-                    className="flex cursor-pointer"
-                    onClick={() => setSelectedPost(post)}
-                  >
-                    Add a comment
-                  </button>
-                </DialogTrigger>
+                {isAuthenticated ? (
+                  <DialogTrigger asChild>
+                    <button
+                      className="flex cursor-pointer"
+                      onClick={() => setSelectedPost(post)}
+                    >
+                      Add a comment
+                    </button>
+                  </DialogTrigger>
+                ) : (
+                  <p>Login to add comment</p>
+                )}
 
                 <DialogContent>
                   {selectedPost && <AllCommentsModal post={selectedPost} />}
