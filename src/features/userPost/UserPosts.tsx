@@ -40,15 +40,16 @@ const UserPosts = () => {
 
   const { isPending, error } = useGetUserPosts(user?.id ?? "");
 
-  const { items, pagination } = useSelector(
-    (state: RootState) => state.userPosts,
+  const { items = [], pagination } = useSelector(
+    (state: RootState) => state.userPosts ?? {},
   );
 
   const totalPages = Math.ceil(pagination.total / pagination.limit);
 
   if (isPending) return <div>Loading posts...</div>;
   if (error) return <div>Failed to load posts</div>;
-  if (!items.length) return <div>No posts to show</div>;
+
+  if (!items?.length) return <div>No posts to show</div>;
 
   return (
     <div>

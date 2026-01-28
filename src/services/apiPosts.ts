@@ -95,10 +95,7 @@ export async function getUserPosts({
     console.error("Error fetching user posts:", error);
     throw new Error("Could not fetch user posts");
   }
-  if (error) {
-    console.error("Error fetching posts:", error);
-    throw new Error("Could not fetch posts");
-  }
+
   return {
     items: data ?? [],
     total: count ?? 0,
