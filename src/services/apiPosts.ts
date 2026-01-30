@@ -159,3 +159,33 @@ export async function updateUserPost({
 
   return data;
 }
+
+export async function deleteImageByPost({
+  postId,
+  imageUrl,
+}: {
+  postId: string;
+  imageUrl: string;
+}) {
+  const fileName = imageUrl.split("/post_images/")[1];
+
+  const { error } = await supabase.storage
+    .from("post_images")
+    .remove([fileName]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to delete image from storage");
+  }
+
+  const { error: updateError } = await supabase
+    .from("posts")
+    .update({ image: null })
+    .eq("id", postId);
+
+  if (updateError) {
+    throw new Error("Failed to update post image");
+  }
+
+  return true;
+}

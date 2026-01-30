@@ -71,3 +71,17 @@ export async function getCommentCountByPostId(postId: string) {
 
   return count ?? 0;
 }
+
+export async function deleteComment(commentId: string) {
+  const { error } = await supabase
+    .from("comments")
+    .delete()
+    .eq("id", commentId);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Could not delete comment");
+  }
+
+  return true;
+}
