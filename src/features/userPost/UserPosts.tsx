@@ -30,6 +30,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "../../components/ui/dialog";
+import { useDeletePostImage } from "./useDeletePostImage";
 
 const UserPosts = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const UserPosts = () => {
   const [editPost, setEditPost] = useState<Post | null>(null);
 
   const { deletePost, isPending: isDeleting } = useDeleteUserPost();
+  const { deleteImage } = useDeletePostImage();
 
   const { isPending, error } = useGetUserPosts(user?.id ?? "");
 
@@ -97,9 +99,27 @@ const UserPosts = () => {
                 {post.title}
               </CardTitle>
 
-              <div className="flex items-center justify-center p-4 w-full h-64 overflow-hidden mb-4">
-                <img src={post?.image ?? ""} alt={post.title} />
-              </div>
+              {post.image && (
+                <div className="flex flex-col ">
+                  <img
+                    src={post?.image ?? ""}
+                    alt={post.title}
+                    className="w-full h-64"
+                  />
+                  <button
+                    className="text-sm text-red-500 cursor-pointer mt-2"
+                    disabled={isPending}
+                    onClick={() =>
+                      deleteImage({
+                        postId: post.id,
+                        imageUrl: post.image,
+                      })
+                    }
+                  >
+                    Remove image
+                  </button>
+                </div>
+              )}
             </CardHeader>
             <Card className="w-full flex flex-col text-center items-center justify-center">
               <div className="w-full  justify-items-start p-2">

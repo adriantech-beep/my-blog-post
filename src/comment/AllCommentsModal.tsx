@@ -5,6 +5,8 @@ import { useGetComments } from "./useGetComments";
 import { timeAgo } from "@/helper/timeAgo";
 import { useEffect, useRef } from "react";
 import MessageIcon from "../assets/message-circle-more.svg";
+import { useUser } from "@/features/authentication/useUser";
+import { useDeleteComment } from "./useDeleteComment";
 
 type AllCommentsModalProps = {
   post: Post;
@@ -12,6 +14,11 @@ type AllCommentsModalProps = {
 
 const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
   const { comments, isPending } = useGetComments(post?.id);
+  const { user } = useUser();
+  const { deleteComment } = useDeleteComment();
+
+  console.log(comments);
+  console.log(user);
 
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
 
@@ -52,19 +59,49 @@ const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
                 </div>
 
                 {comment.comment && (
-                  <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                    {comment.comment}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                      {comment.comment}
+                    </p>
+
+                    <div>
+                      {comment.user_id === user?.id ? (
+                        <button
+                          className="text-xs text-red-500 cursor-pointer"
+                          onClick={() => deleteComment(comment.id)}
+                        >
+                          Delete
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
                 )}
 
                 {comment.image && (
-                  <div className="mt-3">
-                    <img
-                      src={comment.image}
-                      alt="Comment attachment"
-                      className="max-h-60 w-auto rounded-md border object-cover"
-                      loading="lazy"
-                    />
+                  <div className="flex justify-between">
+                    <div className="mt-3">
+                      <img
+                        src={comment.image}
+                        alt="Comment attachment"
+                        className="max-h-60 w-auto rounded-md border object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div>
+                      {comment.user_id === user?.id ? (
+                        <button
+                          className="text-xs text-red-500 cursor-pointer"
+                          onClick={() => deleteComment(comment.id)}
+                        >
+                          Delete
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

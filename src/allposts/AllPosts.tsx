@@ -73,9 +73,11 @@ const AllPosts = () => {
                 {post.title}
               </CardTitle>
 
-              <div className="flex items-center justify-center p-4 w-full h-64 overflow-hidden mb-4">
-                <img src={post?.image ?? ""} alt={post.title} />
-              </div>
+              {post.image && (
+                <div className="flex items-center justify-center p-4 w-full h-64 overflow-hidden mb-4">
+                  <img src={post?.image ?? ""} alt={post.title} />
+                </div>
+              )}
             </CardHeader>
             <Card className="w-full flex flex-col text-center items-center justify-center">
               <div className="w-full  justify-items-start p-2">
