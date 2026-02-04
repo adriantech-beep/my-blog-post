@@ -85,3 +85,60 @@ export async function deleteComment(commentId: string) {
 
   return true;
 }
+
+export async function updateUserComment({
+  id,
+  comment,
+  image,
+}: {
+  id: string;
+  comment?: string | null;
+  image?: File | null;
+}) {
+  let imagePath: string | null | undefined;
+
+  if (image instanceof File) {
+    const imageName = `${crypto.randomUUID()}-${image.name}`.replaceAll(
+      "/",
+      "",
+    );
+
+    const { error: uploadError } = await supabase.storage
+      .from("comments_images")
+      .upload(imageName, image);
+
+    if (uploadError) {
+      throw new Error("Image upload failed");
+    }
+
+    imagePath = `${supabaseUrl}/storage/v1/object/public/comments_images/${imageName}`;
+  }
+
+  const updatePayload: {
+    comment?: string | null;
+    image?: string | null;
+  } = {};
+
+  if (comment !== undefined) {
+    updatePayload.comment = comment;
+  }
+
+  if (image === null) {
+    updatePayload.image = null;
+  } else if (imagePath) {
+    updatePayload.image = imagePath;
+  }
+
+  const { data, error } = await supabase
+    .from("comments")
+    .update(updatePayload)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error("Could not update comment");
+  }
+
+  return data;
+}

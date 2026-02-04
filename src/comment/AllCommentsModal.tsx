@@ -3,7 +3,7 @@ import CommentForm from "./CommentForm";
 import { Post } from "@/types/post";
 import { useGetComments } from "./useGetComments";
 import { timeAgo } from "@/helper/timeAgo";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessageIcon from "../assets/message-circle-more.svg";
 import { useUser } from "@/features/authentication/useUser";
 import { useDeleteComment } from "./useDeleteComment";
@@ -16,9 +16,11 @@ const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
   const { comments, isPending } = useGetComments(post?.id);
   const { user } = useUser();
   const { deleteComment } = useDeleteComment();
-
-  console.log(comments);
-  console.log(user);
+  const [editingComment, setEditingComment] = useState<{
+    id: string;
+    comment: string | null;
+    image: string | null;
+  } | null>(null);
 
   const lastCommentRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,52 +60,41 @@ const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
                   </span>
                 </div>
 
-                {comment.comment && (
-                  <div className="flex items-center justify-between">
-                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                      {comment.comment}
-                    </p>
+                <div className="flex justify-between gap-4">
+                  <div className="flex-1">
+                    {comment.comment && (
+                      <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+                        {comment.comment}
+                      </p>
+                    )}
 
-                    <div>
-                      {comment.user_id === user?.id ? (
-                        <button
-                          className="text-xs text-red-500 cursor-pointer"
-                          onClick={() => deleteComment(comment.id)}
-                        >
-                          Delete
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {comment.image && (
-                  <div className="flex justify-between">
-                    <div className="mt-3">
+                    {comment.image && (
                       <img
                         src={comment.image}
                         alt="Comment attachment"
-                        className="max-h-60 w-auto rounded-md border object-cover"
+                        className="mt-3 max-h-60 w-auto rounded-md border object-cover"
                         loading="lazy"
                       />
-                    </div>
-
-                    <div>
-                      {comment.user_id === user?.id ? (
-                        <button
-                          className="text-xs text-red-500 cursor-pointer"
-                          onClick={() => deleteComment(comment.id)}
-                        >
-                          Delete
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                    </div>
+                    )}
                   </div>
-                )}
+                  {comment.user_id === user?.id && (
+                    <div className="flex gap-2 items-start">
+                      <button
+                        className="text-xs cursor-pointer"
+                        onClick={() => setEditingComment(comment)}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className="text-xs text-red-500 cursor-pointer"
+                        onClick={() => deleteComment(comment.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -111,7 +102,12 @@ const AllCommentsModal = ({ post }: AllCommentsModalProps) => {
       )}
 
       <div className="mt-4 border-t pt-4">
-        <CommentForm post={post} />
+        <CommentForm
+          post={post}
+          editingComment={editingComment}
+          onCancelEdit={() => setEditingComment(null)}
+          onEditSuccess={() => setEditingComment(null)}
+        />
       </div>
     </>
   );
