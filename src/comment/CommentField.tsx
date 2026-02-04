@@ -62,7 +62,7 @@ const CommentField = () => {
           </FormItem>
         )}
       />
-      <div className="w-76">
+      <div className="w-60">
         {postInfoFields.map(({ name, placeholder, type }) => (
           <FormField
             key={name}
